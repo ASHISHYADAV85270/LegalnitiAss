@@ -1,8 +1,26 @@
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/slices/authSlices.ts";
+import { useEffect } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/slices/authSlices.ts";
+const checkAuth = "http://localhost:8080/user/";
+
 const Home = () => {
   const userDetail = useSelector(selectUser);
-  // console.log(userDetail);
+  const dispatch = useDispatch();
+  async function checkUserisPresent() {
+    try {
+      let { data } = await axios.get(checkAuth, { withCredentials: true });
+      console.log(data);
+      if (data.success) {
+        dispatch(setUser(data.user));
+      }
+    } catch (error) {}
+  }
+  useEffect(() => {
+    checkUserisPresent();
+  }, []);
   return (
     <div className=" h-86 bg-gray-100">
       <section className="bg-gray-800 text-white h-100 border-t-2 flex items-center justify-center">

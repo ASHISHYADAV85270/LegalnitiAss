@@ -7,13 +7,30 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/slices/authSlices.ts";
+import { useEffect } from "react";
+
 const loginUrl = "http://localhost:8080/user/login";
+const checkAuth = "http://localhost:8080/user/";
+
 const LoginPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  async function checkUserisPresent() {
+    try {
+      let { data } = await axios.get(checkAuth, { withCredentials: true });
+      console.log(data);
+      if (data.success) {
+        dispatch(setUser(data.user));
+        navigate("/");
+      }
+    } catch (error) {}
+  }
+  useEffect(() => {
+    checkUserisPresent();
+  }, []);
   const handleLogin = async (email: string, password: string) => {
     try {
-      console.log(email, password);
       let { data } = await axios.post(
         loginUrl,
         {
