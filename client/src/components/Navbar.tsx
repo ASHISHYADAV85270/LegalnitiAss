@@ -1,8 +1,9 @@
 // NavBar.tsx
-
-import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../redux/slices/authSlices.ts";
 const NavBar: React.FC = () => {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   return (
     <nav className="bg-gray-800 p-4 h-14">
       <div className="container mx-auto flex justify-between items-center">
@@ -14,9 +15,7 @@ const NavBar: React.FC = () => {
           <li className="text-white">
             <Link to={"/about"}>About</Link>
           </li>
-          <li className="text-white">
-            <Link to={"/logout"}>Logout</Link>
-          </li>
+
           <li className="relative group">
             <span className="text-white cursor-pointer">
               USER
@@ -33,12 +32,22 @@ const NavBar: React.FC = () => {
               </svg>
             </span>
             <ul className="absolute hidden bg-gray-700 text-white p-2 space-y-2 group-hover:block">
-              <li className="text-white">
-                <Link to={"/login"}>Login</Link>
-              </li>
-              <li className="text-white">
-                <Link to={"/signup"}>Signup</Link>
-              </li>
+              {isAuthenticated ? (
+                <>
+                  <li className="text-white">
+                    <Link to={"/logout"}>Logout</Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="text-white">
+                    <Link to={"/login"}>Login</Link>
+                  </li>
+                  <li className="text-white">
+                    <Link to={"/signup"}>Signup</Link>
+                  </li>
+                </>
+              )}
             </ul>
           </li>
         </ul>

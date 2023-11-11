@@ -1,9 +1,13 @@
 import SignupForm from "./SignupForm";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/slices/authSlices.ts";
 const registeruserurl = "http://localhost:8080/user/";
 const SignupPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSignup = async (
     fullName: string,
     password: string,
@@ -21,6 +25,8 @@ const SignupPage = () => {
       );
       if (data.success) {
         toast.success(data.message);
+        dispatch(setUser(data.user));
+        navigate("/");
       } else {
         toast.error(data.message);
       }

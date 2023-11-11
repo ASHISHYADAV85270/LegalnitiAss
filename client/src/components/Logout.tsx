@@ -1,8 +1,14 @@
+import { useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/slices/authSlices.ts";
 const logoutUrl = "http://localhost:8080/user/logout";
 const Logout = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       const { data } = await axios.post(
@@ -11,6 +17,9 @@ const Logout = () => {
         { withCredentials: true }
       );
       toast.success(data.message);
+      // Clear user in Redux state
+      dispatch(logout());
+      navigate("/");
     } catch (error) {}
   };
   return (
